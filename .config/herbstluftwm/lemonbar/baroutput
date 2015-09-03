@@ -1,0 +1,86 @@
+# Colours
+black="#181818"
+blue="#7CAFC2"
+orange="#DC9656"
+purple="#BA8BAF"
+mint="#9EE6DA"
+mocha="#D2BFB1"
+babyblue="#B8E5FC"
+blugrey="#bbccdd"
+navyblu="#223344"
+khakigreen="#556644"
+lkhakigreen="#889977"
+solarizedoffwhite="#FDF6A3"
+solarizedgreen="#859900"
+solarizedorange="#B58900"
+solarizedfullorange="#CB4B16"
+gitgrey="#A8A8A8"
+gitturqoise="#008787"
+gitgreen="#008700"
+gitpink="#D7005F"
+gitgrey2="#444444"
+herokutext="#8584AE"
+herokublack="#1B1B24"
+herokured="#C82829"
+herokugreen="#8AE234"
+herokuyel="#FFEA00"
+herokublu="#09AFED"
+herokupurple="#A292FF"
+herokumint="#B4F5FE"
+herokugrey="#D6D6D6"
+red="#B90000"
+blue="#0A0094"
+
+clock(){
+    date '+%a %d %b %l:%M %p'
+}
+
+memory(){
+    free -m | awk '/Mem:/ {print "[⭦ " $3, "/ " $2 " MB]"}'
+}
+
+window(){
+    title=$(~/.config/herbstluftwm/bin/getwindowname)
+    echo "$title" | cut -c 1-40 # Limits the output to a maximum of 40 chars
+}
+
+music(){
+        songstatus=$(~/.config/herbstluftwm/bin/cmus-now-playing.sh)
+                vollevel=$(amixer get Master | egrep -o "[0-9]+%" | head -n 1)
+                echo "[♫ $songstatus @ $vollevel Volume]"
+}
+
+tag(){
+  tagno=$(~/.config/herbstluftwm/bin/find-tag)
+  echo "[tag: $tagno]"
+}
+
+battery(){
+    batt=$(acpi -b | awk -F' ' '{print $4""; if ($3 == "Unknown,") print "="; else if ($3 == "Discharging,") print "("substr($5,0,5)")"; else if ($3 == "Charging,") print "⚡- "; else 
+print "("$3")"}' | sed -e 's/,//' | tr '\n' ' ')
+    echo "[Bat: $batt]"
+}
+
+net_widget(){
+	ssid=$(iwconfig $net_dev | grep ESSID | sed -e 's/.*:\(.*\)/\1/' -e 's/\s*$//g' -e 's/"//g' | head -n 1 | awk '{print}')
+	echo "[$ssid]"
+}
+
+my_ip(){
+	ip=$(ip addr show |grep inet | grep -v inet6 |grep -v '127' | awk '{print $2}' |cut -d: -f2 | tr '\n' ' ')
+	echo "[ip: $ip]"
+}
+
+usage_disk(){
+	sda3=$(df /dev/sda3 | awk '{ print $5 }' | tail -n 1)
+	sda4=$(df /dev/sda4 | awk '{ print $5 }' | tail -n 1)
+	sda1=$(df /dev/sda1 | awk '{ print $5 }' | tail -n 1)
+	echo "[/home $sda4% | / $sda3% | /boot $sda1%]"
+}
+
+while :; do
+    echo "%{l}%{B$herokublack} $(window)  %{l} %{r}%{B$herokublack} $(usage_disk) %{B$herokublack} $(music)  %{B$herokublack}  $(memory)  %{B$herokublack}  $(tag)  %{B$herokublack} $(battery) %{B$herokublack} $(my_ip) %{B$herokublack} $(net_widget) %{B$herokublack} ⭧ $(clock)  %{B$herokublack}%{r}"
+
+    sleep .1s
+done
+
