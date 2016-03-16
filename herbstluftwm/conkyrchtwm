@@ -1,0 +1,31 @@
+# download dzicons at http://arpinux.org/public/misc/dzicons.tgz
+out_to_x no
+out_to_console yes
+update_interval 1.0
+total_run_times 0
+use_spacer none
+
+TEXT
+
+^fg(\#ff4500) | ${execi 1000 cat /proc/cpuinfo | grep 'model name' | cut -c 14-33 | uniq} \
+^fg(\#ff4500) | ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu0}% \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu1}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu2}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu3}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu4}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu5}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu6}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu7}%  \
+^fg(\#ff4500) ^i(dzicons/cpu.xbm) ^fg(\#ccc)${cpu cpu8}%  \
+^fg(\#0489B1) | Memory ^i(dzicons/mem.xbm) ^fg(\#ccc) $mem / 8.00Gib\
+^fg(\#ffd700) | sda4 ^fg(\#ccc)${fs_used_perc /home}%^fg(\#ffd700)\
+^fg(\#ffd700) | sda1 ^fg(\#ccc)${fs_used_perc /}%^fg(\#ffd700)\
+^fg(\#FFBF00) ${if_up wlp3s0} ^i(~/.config/dzicons/net_wired.xbm) [wlp3s0]\
+^fg(\#31B404) | ^i(dzicons/net_up_02.xbm) Up ${upspeedf wlp3s0}\
+^fg(\#DF7401) | ^i(dzicons/net_down_02.xbm) Down ${downspeedf wlp3s0}\
+^fg(\#ff4500) | ^i(dzicons/batt10.xbm) ^fg(\#ccc)${exec acpi | cut -d" " -f 4 | sed -r 's/\,//'}  \
+^fg() ${endif}\
+^fg(\#04B4AE)| ^i(dzicons/vol4.xbm) Vol: ${exec amixer | grep Playback | grep "Front Left:" | cut -c 36-41}\
+^fg(\#ccc) | ${time %H:%M} \
+| ${time %D}\
+
